@@ -31,7 +31,7 @@ public class Pile {
 
     public void takeCard(int index){
         if(index < 0 || index >= 4) throw new IndexOutOfBoundsException();
-        if(index >= hiddenCards.size()) throw new IllegalStateException();
+        if(index >= visibleCards.size()) throw new IllegalStateException();
         visibleCards.remove(index);
         visibleCards.addFirst(drawCards());
     }
@@ -52,7 +52,9 @@ public class Pile {
         JSONObject result = new JSONObject();
         JSONArray visible = new JSONArray();
         for(Card card : visibleCards){
-            visible.put(new JSONObject(card.state()));
+            JSONObject cardJson = new JSONObject();
+            cardJson.put("state", card.state());
+            visible.put(cardJson);
         }
         result.put("visible", visible);
         result.put("hiddenCardsCount", hiddenCards.size());
