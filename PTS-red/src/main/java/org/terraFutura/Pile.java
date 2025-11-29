@@ -1,8 +1,6 @@
 package org.terraFutura;
 
 import org.json.JSONObject;
-
-import javax.smartcardio.Card;
 import java.util.*;
 
 public class Pile {
