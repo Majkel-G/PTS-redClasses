@@ -6,7 +6,7 @@ import java.util.*;
 
 public class Pile {
     private List<Card> hiddenCards;
-    private List<Card> visibleCards;
+    private LinkedList<Card> visibleCards;
     private Random random;
 
     public Pile(List<Card> hiddenCards, List<Card> visibleCards) {
@@ -15,21 +15,23 @@ public class Pile {
 
     public Pile(List<Card> hiddenCards, List<Card> visibleCards ,Random random) {
         this.hiddenCards = new ArrayList<>(hiddenCards);
-        this.visibleCards = new ArrayList<>(visibleCards);
+        this.visibleCards = new LinkedList<>(visibleCards);
         this.random = random==null?new Random():random;
     }
 
     public Pile(){
-        this(Collections.emptyList(),Collections.emptyList(),new Random());
+        this(new ArrayList<>(),new LinkedList<>(),new Random());
     }
 
     public Card getCard(int index) {
         if(index < 0 || index >= 4) throw new IndexOutOfBoundsException();
-        return hiddenCards.get(index);
+        if(index >= visibleCards.size()) throw new IllegalStateException();
+        return visibleCards.get(index);
     }
 
     public void takeCard(int index){
         if(index < 0 || index >= 4) throw new IndexOutOfBoundsException();
+        if(index >= hiddenCards.size()) throw new IllegalStateException();
         visibleCards.remove(index);
         visibleCards.addFirst(drawCards());
     }
