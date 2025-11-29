@@ -53,7 +53,8 @@ public class Pile {
         JSONArray visible = new JSONArray();
         for(Card card : visibleCards){
             JSONObject cardJson = new JSONObject();
-            cardJson.put("state", card.state());
+            if(card!=null) cardJson.put("state", card.state());
+            else cardJson.put("state", JSONObject.NULL);
             visible.put(cardJson);
         }
         result.put("visible", visible);
