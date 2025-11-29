@@ -1,5 +1,6 @@
 package org.terraFutura;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.*;
 
@@ -15,20 +16,22 @@ public class Pile {
     public Pile(List<Card> hiddenCards, List<Card> visibleCards ,Random random) {
         this.hiddenCards = new ArrayList<>(hiddenCards);
         this.visibleCards = new ArrayList<>(visibleCards);
-        this.random = random;
+        this.random = random==null?new Random():random;
     }
 
-    public Optional<Card> getCard(int index) {
-        if(index < 0 || index >= 4) throw new IndexOutOfBoundsException();
-        return Optional.ofNullable(visibleCards.get(index));
+    public Pile(){
+        this(Collections.emptyList(),Collections.emptyList(),new Random());
     }
 
-    public Card takeCard(int index){
+    public Card getCard(int index) {
         if(index < 0 || index >= 4) throw new IndexOutOfBoundsException();
-        Card card = visibleCards.get(index);
+        return hiddenCards.get(index);
+    }
+
+    public void takeCard(int index){
+        if(index < 0 || index >= 4) throw new IndexOutOfBoundsException();
         visibleCards.remove(index);
         visibleCards.addFirst(drawCards());
-        return card;
     }
 
     private Card drawCards(){
@@ -43,11 +46,22 @@ public class Pile {
         visibleCards.addFirst(drawCards());
     }
 
-    private String state(){
+    public String state(){
         JSONObject result = new JSONObject();
-        result.put("visibleCards", visibleCards);
+        JSONArray visible = new JSONArray();
+        for(Card card : visibleCards){
+            visible.put(new JSONObject(card.state()));
+        }
+        result.put("visible", visible);
         result.put("hiddenCardsCount", hiddenCards.size());
         return result.toString();
+    }
+
+    public int getVisibleCardsCount() {
+        return visibleCards.size();
+    }
+    public int getHiddenCardsCount() {
+        return hiddenCards.size();
     }
 
 
